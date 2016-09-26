@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+	<!--
+		根据用户ID查询用户信息，只返回一条。
+		#{}表示一个占位符号;
+		${}:表示拼接sql串，将接收到的参数的内容不加任何修饰的拼接在sql中 ；
+		${}容易sql注入，建议不使用；
+		resultType：表示单条记录映射成的java对象；
+		parameterType输入条件的类型；
+	-->
+	<select id="findUserById" parameterType="int" resultType="com.gjw.po.User" >
+		select * from user where id=#{value}
+	</select>
+	<!--
+		根据用户名模糊查询用户信息，可能返回多条。
+	-->
+	<select id="findUserByName" parameterType="java.lang.String" resultType="com.gjw.po.User" >
+		select * from user where userName like '%${value}%'
+	</select>
+	<!--
+		添加用户
+		parameterType:指定输入参数类型是pojo（包括用户信息）
+		#{}中指定pojo的属性名，接收到pojo对象的属性值，mybatis通过OGNL获得对象的属性值；
+	-->
+	<insert id="insertUser" parameterType="com.gjw.po.User">
+		<!-- 
+			将插入的数据主键返回，返回到user对象中；
+			select LAST_INSERT_ID();得到	刚insert进去记录的主键值，只适合自增主键
+			keyProperty：将查询到的自增主键值设置到parameterType指定的对象的哪个属性
+			order：select LAST_INSERT_ID() 执行顺序，相对于insert语句来说它的执行顺序
+			resultType:指定select LAST_INSERT_ID()结果类型
+		 -->
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into user (userName,userAge,userAddress) 
+		value(#{userName},#{userAge},#{userAddress})
+		
+		
+		<!-- 
+			使用mysql的uuid()生成主键
+			执行过程：
+				首先通过uuid()得到主键，将主键设置到user对象中，
+				其次在insert执行时，从user对象中取出id属性值。
+		 -->
+		<!-- <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+			select uuid()oracle 可以查询序列得到自增主键
+		</selectKey>
+		
+		insert into user (id,userName,userAge,userAddress) 
+		value(#{id},#{userName},#{userAge},#{userAddress}) -->
+	</insert>
+	
+	<!--
+		根据id删除用户
+	-->
+	<delete id="deleteUser" parameterType="java.lang.Integer">
+		delete from user where id = #{id}
+	</delete>
+	<!--
+		根据id更新用户
+		
+	-->
+	<delete id="updateUser" parameterType="com.gjw.po.User">
+		update user set userName=#{userName},userAge=#{userAge},userAddress=#{userAddress}
+		where id=#{id}
+	</delete>
+	
+</mapper>
