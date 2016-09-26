@@ -10,10 +10,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			<transactionManager type="JDBC" />
 		<!-- 数据库连接池-->
 			<dataSource type="POOLED">
-				<property name="driver" value="com.mysql.jdbc.Driver" />
-				<property name="url" value="jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8" />
-				<property name="username" value="root" />
-				<property name="password" value="tiger" />
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver" />
+				<property name="url" value="jdbc:oracle:thin:@111.198.72.194:8087:orcl" />
+				<property name="username" value="sszjrkf0829" />
+				<property name="password" value="sszjrkf0829" />
 			</dataSource>
 		</environment>
 	</environments>

@@ -12,13 +12,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType输入条件的类型；
 	-->
 	<select id="findUserById" parameterType="int" resultType="com.gjw.po.User" >
-		select * from user where id=#{value}
+		select * from t_user where id=#{value}
 	</select>
 	<!--
 		根据用户名模糊查询用户信息，可能返回多条。
 	-->
 	<select id="findUserByName" parameterType="java.lang.String" resultType="com.gjw.po.User" >
-		select * from user where userName like '%${value}%'
+		select * from t_user where userName like '%${value}%'
 	</select>
 	<!--
 		添加用户
@@ -34,9 +34,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			resultType:指定select LAST_INSERT_ID()结果类型
 		 -->
 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-			select LAST_INSERT_ID()
+			select f_get_table_id('xd_user') from dual
 		</selectKey>
-		insert into user (userName,userAge,userAddress) 
+		insert into t_user (userName,userAge,userAddress) 
 		value(#{userName},#{userAge},#{userAddress})
 		
 		
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			select uuid()oracle 可以查询序列得到自增主键
 		</selectKey>
 		
-		insert into user (id,userName,userAge,userAddress) 
+		insert into t_user (id,userName,userAge,userAddress) 
 		value(#{id},#{userName},#{userAge},#{userAddress}) -->
 	</insert>
 	
@@ -58,14 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		根据id删除用户
 	-->
 	<delete id="deleteUser" parameterType="java.lang.Integer">
-		delete from user where id = #{id}
+		delete from t_user where id = #{id}
 	</delete>
 	<!--
 		根据id更新用户
 		
 	-->
 	<delete id="updateUser" parameterType="com.gjw.po.User">
-		update user set userName=#{userName},userAge=#{userAge},userAddress=#{userAddress}
+		update t_user set userName=#{userName},userAge=#{userAge},userAddress=#{userAddress}
 		where id=#{id}
 	</delete>
 	
