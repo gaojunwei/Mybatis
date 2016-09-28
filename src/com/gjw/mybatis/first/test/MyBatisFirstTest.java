@@ -3,6 +3,7 @@ package com.gjw.mybatis.first.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -34,8 +35,9 @@ public class MyBatisFirstTest {
 	@Test
 	public void findUserById(){
 		//通过SqlSession 操作数据库
-		User user = (User)sqlSession.selectOne("test.findUserById", 1);
-		System.out.println(user.getUserName());
+		//User user = (User)sqlSession.selectOne("test.findUserById", 1);
+		Map<String, Object> map = (Map<String, Object>)sqlSession.selectOne("test.findUserById", "3340");
+		System.out.println("--->>>"+map.get("XU_ID"));
 		sqlSession.close();//关闭回话释放资源
 	}
 	/**
@@ -43,8 +45,8 @@ public class MyBatisFirstTest {
 	 * */
 	@Test
 	public void findUserByName(){
-		List<User> list = sqlSession.selectList("test.findUserByName", "高");
-		System.out.println(list);
+		List<Map<String, Object>> list = sqlSession.selectList("test.findUserByName", "hy");
+		System.out.println(list.size());
 		sqlSession.close();//关闭回话释放资源
 	}
 	/**

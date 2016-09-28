@@ -11,21 +11,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		resultType：表示单条记录映射成的java对象；
 		parameterType输入条件的类型；
 	-->
-	<select id="findUserById" parameterType="int" resultType="com.gjw.po.User" >
-		select * from t_user where id=#{value}
+	<select id="findUserById" parameterType="int" resultType="java.util.Map" >
+		select * from xd_user where xu_id=#{value}
 	</select>
 	<!--
 		根据用户名模糊查询用户信息，可能返回多条。
 	-->
-	<select id="findUserByName" parameterType="java.lang.String" resultType="com.gjw.po.User" >
-		select * from t_user where userName like '%${value}%'
+	<select id="findUserByName" parameterType="java.lang.String" resultType="java.util.Map" >
+		select * from xd_user where xu_name like '%${value}%'
 	</select>
 	<!--
 		添加用户
 		parameterType:指定输入参数类型是pojo（包括用户信息）
 		#{}中指定pojo的属性名，接收到pojo对象的属性值，mybatis通过OGNL获得对象的属性值；
 	-->
-	<insert id="insertUser" parameterType="com.gjw.po.User">
+	<insert id="insertUser" parameterType="java.util.Map">
 		<!-- 
 			将插入的数据主键返回，返回到user对象中；
 			select LAST_INSERT_ID();得到	刚insert进去记录的主键值，只适合自增主键
