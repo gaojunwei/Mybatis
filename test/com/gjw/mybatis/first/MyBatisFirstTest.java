@@ -1,4 +1,4 @@
-package com.gjw.mybatis.first.test;
+package com.gjw.mybatis.first;
 
 import java.io.IOException;
 import java.io.InputStream;
