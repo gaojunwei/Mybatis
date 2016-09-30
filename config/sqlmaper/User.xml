@@ -12,7 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType输入条件的类型；
 	-->
 	<select id="findUserById" parameterType="int" resultType="java.util.Map" >
-		select * from xd_user where xu_id=#{value}
+		select * from xd_user where 1=1 ${value}
+	</select>
+	<!-- 获取表的主键 -->
+	<select id="getTableId" parameterType="java.lang.String" resultType="java.util.Map" >
+		select f_get_table_id('${value}') table_id from dual
 	</select>
 	<!--
 		根据用户名模糊查询用户信息，可能返回多条。
@@ -33,12 +37,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			order：select LAST_INSERT_ID() 执行顺序，相对于insert语句来说它的执行顺序
 			resultType:指定select LAST_INSERT_ID()结果类型
 		 -->
-		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-			select f_get_table_id('xd_user') from dual
+		<selectKey resultType="java.math.BigDecimal" order="BEFORE" keyProperty="ID">
+			select f_get_table_id('${value}') ID from dual
 		</selectKey>
-		insert into t_user (userName,userAge,userAddress) 
-		value(#{userName},#{userAge},#{userAddress})
-		
+		insert into t_user 
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="ID != null" >
+		    	id,
+		    </if>
+		    <if test="username != null" >
+		    	username,
+		    </if>
+		    <if test="userage != null" >
+		    	userage,
+		    </if>
+		    <if test="useraddress != null" >
+		    	useraddress
+		    </if>
+		</trim>
+		values 
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="ID != null" >
+		    	${ID},
+		    </if>
+		    <if test="username != null" >
+		    	'${username}',
+		    </if>
+		    <if test="userage != null" >
+		    	${userage},
+		    </if>
+		    <if test="useraddress != null" >
+		    	'${useraddress}',
+		    </if>
+		</trim>
 		
 		<!-- 
 			使用mysql的uuid()生成主键
@@ -54,19 +85,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		value(#{id},#{userName},#{userAge},#{userAddress}) -->
 	</insert>
 	
-	<!--
-		根据id删除用户
-	-->
-	<delete id="deleteUser" parameterType="java.lang.Integer">
-		delete from t_user where id = #{id}
+	<!--删-->
+	<delete id="deleteUser" parameterType="java.lang.String">
+		delete from t_user where 1=1 ${value}
 	</delete>
-	<!--
-		根据id更新用户
-		
-	-->
-	<delete id="updateUser" parameterType="com.gjw.po.User">
-		update t_user set userName=#{userName},userAge=#{userAge},userAddress=#{userAddress}
-		where id=#{id}
+	
+	<!--改-->
+	<delete id="updateUser" parameterType="java.util.Map">
+		update t_user
+		<set>  
+	        <if test="username != null and username != '' ">
+	        	username='${username}',
+	        </if>
+	        <if test="userage != null and userage != '' ">
+	        	userage=${userage},
+	        </if>
+	        <if test="useraddress != null and useraddress != '' ">
+	        	useraddress='${useraddress}',
+	        </if>
+        </set>
+        where 1=1 ${con}
 	</delete>
+	
+	<parameterMap type="java.util.Map" id="getUserCountMap">
+    	<parameter property="user_id" mode="IN" jdbcType="INTEGER"/>
+    	<parameter property="returnstr" mode="OUT" jdbcType="VARCHAR"/>
+    </parameterMap>
+	
+	<!--调用存储过程-->
+	<select id="callProcedures" parameterMap="getUserCountMap" statementType="CALLABLE">
+    	CALL a_getuser_test(?,?)
+    </select>
+	
+	
+	
 	
 </mapper>

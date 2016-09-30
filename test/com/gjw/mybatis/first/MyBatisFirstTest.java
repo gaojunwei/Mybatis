@@ -2,6 +2,7 @@ package com.gjw.mybatis.first;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,6 @@ import org.junit.Test;
 import com.gjw.po.User;
 
 public class MyBatisFirstTest {
-	
 	SqlSession sqlSession = null;
 	
 	@Before
@@ -34,10 +34,9 @@ public class MyBatisFirstTest {
 	 * */
 	@Test
 	public void findUserById(){
-		//通过SqlSession 操作数据库
-		//User user = (User)sqlSession.selectOne("test.findUserById", 1);
-		Map<String, Object> map = (Map<String, Object>)sqlSession.selectOne("test.findUserById", "3340");
-		System.out.println("--->>>"+map.get("XU_ID"));
+		String con = " and xu_id=3340 ";
+		Map<String, Object> map = (Map<String, Object>)sqlSession.selectOne("test.findUserById", con);
+		System.out.println("--->>>"+map.toString());
 		sqlSession.close();//关闭回话释放资源
 	}
 	/**
@@ -54,15 +53,16 @@ public class MyBatisFirstTest {
 	 * */
 	@Test
 	public void insertUser(){
-		User user = new User();
-		user.setUserName("高天佑");
-		user.setUserAge("25");
-		user.setUserAddress("河南郑州");
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("username", "高佳俊1");
+		dataMap.put("userage", "2");
+		dataMap.put("useraddress", "北京");
+		dataMap.put("value", "xd_user");
 		
-		int a = sqlSession.insert("test.insertUser", user);
+		int a = sqlSession.insert("test.insertUser", dataMap);
 		
 		sqlSession.commit();//提交事物
-		System.out.println("影响 "+a+" 行。返回的自增主键值："+user.getId());
+		System.out.println("影响 "+a+" 行。返回的自增主键值："+dataMap);
 		sqlSession.close();//关闭回话释放资源
 	}
 	/**
@@ -70,7 +70,8 @@ public class MyBatisFirstTest {
 	 * */
 	@Test
 	public void deleteUser(){
-		int a = sqlSession.update("test.deleteUser",1);
+		String con = " and username='高佳俊'";
+		int a = sqlSession.update("test.deleteUser",con);
 		sqlSession.commit();//提交事物
 		System.out.println("影响 "+a+" 行。");
 		sqlSession.close();//关闭回话释放资源
@@ -80,15 +81,28 @@ public class MyBatisFirstTest {
 	 * */
 	@Test
 	public void updateUser(){
-		User user = new User();
-		user.setId(2);
-		user.setUserName("高佳俊");
-		user.setUserAge("28");
-		user.setUserAddress("河北邢台");
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("username", "高大侠66");
+		dataMap.put("userage", 25);
+		dataMap.put("useraddress", "河北");
+		dataMap.put("con", " and id=28896");
 		
-		int a = sqlSession.update("test.updateUser",user);
+		int a = sqlSession.update("test.updateUser",dataMap);
+		
 		sqlSession.commit();//提交事物
 		System.out.println("影响 "+a+" 行。");
+		sqlSession.close();//关闭回话释放资源
+	}
+	/**
+	 * 调用存储过程
+	 * */
+	@Test
+	public void callProcedures(){
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("user_id", 28896);
+		dataMap.put("returnstr", "-1");
+		sqlSession.selectOne("test.callProcedures",dataMap);
+		System.out.println(dataMap);
 		sqlSession.close();//关闭回话释放资源
 	}
 }
