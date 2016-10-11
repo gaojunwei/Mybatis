@@ -109,12 +109,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<parameterMap type="java.util.Map" id="getUserCountMap">
     	<parameter property="user_id" mode="IN" jdbcType="INTEGER"/>
-    	<parameter property="returnstr" mode="OUT" jdbcType="VARCHAR"/>
+    	<parameter property="param_1" mode="OUT" jdbcType="VARCHAR"/>
+    	<parameter property="param_2" mode="OUT" jdbcType="INTEGER"/>
     </parameterMap>
 	
 	<!--调用存储过程-->
 	<select id="callProcedures" parameterMap="getUserCountMap" statementType="CALLABLE">
-    	CALL a_getuser_test(?,?)
+    	CALL a_getuser_test(?,?,?)
     </select>
 	
 	

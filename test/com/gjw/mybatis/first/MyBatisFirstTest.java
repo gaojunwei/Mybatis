@@ -100,7 +100,6 @@ public class MyBatisFirstTest {
 	public void callProcedures(){
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("user_id", 28896);
-		dataMap.put("returnstr", "-1");
 		sqlSession.selectOne("test.callProcedures",dataMap);
 		System.out.println(dataMap);
 		sqlSession.close();//关闭回话释放资源
