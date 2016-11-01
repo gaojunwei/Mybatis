@@ -89,9 +89,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteUser" parameterType="java.lang.String">
 		delete from t_user where 1=1 ${value}
 	</delete>
-	
 	<!--改-->
-	<delete id="updateUser" parameterType="java.util.Map">
+	<update id="updateUser" parameterType="java.util.Map">
 		update t_user
 		<set>  
 	        <if test="username != null and username != '' ">
@@ -105,7 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        </if>
         </set>
         where 1=1 ${con}
-	</delete>
+	</update>
 	
 	<parameterMap type="java.util.Map" id="getUserCountMap">
     	<parameter property="user_id" mode="IN" jdbcType="INTEGER"/>

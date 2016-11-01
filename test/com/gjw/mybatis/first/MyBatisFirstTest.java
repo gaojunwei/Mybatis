@@ -82,7 +82,7 @@ public class MyBatisFirstTest {
 	@Test
 	public void updateUser(){
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		dataMap.put("username", "高大侠66");
+		dataMap.put("username", "高大8-8");
 		dataMap.put("userage", 25);
 		dataMap.put("useraddress", "河北");
 		dataMap.put("con", " and id=28896");
